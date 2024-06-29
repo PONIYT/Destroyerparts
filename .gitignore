@@ -1,41 +1,57 @@
-# Compiled Lua sources
-luac.out
+local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
 
-# luarocks build files
-*.src.rock
-*.zip
-*.tar.gz
+local player = Players.LocalPlayer
+local mouse = player:GetMouse()
+local destroyEnabled = false -- Переменная для хранения состояния переключателя
 
-# Object files
-*.o
-*.os
-*.ko
-*.obj
-*.elf
+local function onRightClick(input, gameProcessedEvent)
+    if gameProcessedEvent then
+        return
+    end
 
-# Precompiled Headers
-*.gch
-*.pch
+    if input.UserInputType == Enum.UserInputType.MouseButton2 and destroyEnabled then
+        local target = mouse.Target
+        if target then
+            target:Destroy()
+        end
+    end
+end
 
-# Libraries
-*.lib
-*.a
-*.la
-*.lo
-*.def
-*.exp
+UserInputService.InputBegan:Connect(onRightClick)
 
-# Shared objects (inc. Windows DLLs)
-*.dll
-*.so
-*.so.*
-*.dylib
+local Rayfield = loadstring(game:HttpGet('https://raw.githubusercontent.com/shlexware/Rayfield/main/source'))()
 
-# Executables
-*.exe
-*.out
-*.app
-*.i*86
-*.x86_64
-*.hex
+local Window = Rayfield:CreateWindow({
+	Name = "destroyer parts by KIRI",
+	LoadingTitle = "Rayfield Interface Suite",
+	LoadingSubtitle = "by Sirius",
+	ConfigurationSaving = {
+		Enabled = true,
+		FolderName = "Rayfield Interface Suite",
+		FileName = "Big Hub"
+	},
+	KeySystem = false, -- Set this to true to use their key system
+	KeySettings = {
+		Title = "Sirius Hub",
+		Subtitle = "Key System",
+		Note = "Join the discord (discord.gg/sirius)",
+		SaveKey = true,
+		Key = "ABCDEF"
+	}
+})
 
+Rayfield:Notify("Title Example", "Content/Description Example", 4483362458) -- Notfication -- Title, Content, Image
+
+local Tab = Window:CreateTab("Tab Example", 4483362458) -- Title, Image
+
+local Section = Tab:CreateSection("Staff")
+
+local Toggle = Tab:CreateToggle({
+	Name = "Destroyer part",
+	CurrentValue = false,
+	Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+	Callback = function(Value)
+		destroyEnabled = Value -- Обновляем значение переменной destroyEnabled
+	end,
+})
